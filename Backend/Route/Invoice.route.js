@@ -1,12 +1,29 @@
 const express= require("express");
-const InvoiceRouter = express.Router();
 const Invoice =  require("../Model/invoice.model");
+const InvoiceRouter = express.Router();
 
 InvoiceRouter.post('/invoices', async (req, res) => {
     try {
       const { invoiceDate, invoiceNumber, invoiceAmount, financialYear } = req.body;
   
       // Perform validations, e.g., check if the invoice number is unique, and date is valid.
+
+      // Perform basic validation
+    if (!invoiceDate || !invoiceNumber || !invoiceAmount || !financialYear) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    // Check if the invoice number is unique
+    const existingInvoice = await Invoice.findOne({ invoiceNumber });
+    if (existingInvoice) {
+      return res.status(400).json({ error: 'Invoice number must be unique' });
+    }
+
+    // Check if the date is a valid date
+    if (isNaN(Date.parse(invoiceDate))) {
+      return res.status(400).json({ error: 'Invalid date format' });
+    }
+
   
       const newInvoice = new Invoice({
         invoiceDate,

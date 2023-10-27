@@ -1,12 +1,12 @@
 const express = require('express');
 const connection = require("./config/connection");
-const Invoices = require("./Route/Invoice.route")
+const InvoiceRouter = require("./Route/Invoice.route")
 const app = express()
 const cors = require("cors");
-require("dotenv").config()
+// require("dotenv").config()
 app.use(cors())
 app.use(express.json())
-app.use("/api", Invoices)
+app.use("/api", InvoiceRouter)
 
 app.get("/", (req,res)=>{
     res.send("Hello World")
